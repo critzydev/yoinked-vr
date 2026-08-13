@@ -15,7 +15,9 @@ Paste this into **PowerShell**:
 irm https://raw.githubusercontent.com/critzydev/yoinked-vr/main/install.ps1 | iex
 ```
 
-It'll set everything up and tell you when to plug the headset in.
+It'll set everything up and tell you when to plug the headset in. Running it
+again later just updates you — it never overwrites settings you've already
+tuned.
 
 You need: **Windows**, an **NVIDIA GPU**, **SteamVR** installed, a **Quest 3**,
 and a **USB 3 cable**.
@@ -30,28 +32,52 @@ That's it. Start SteamVR, put the headset on.
 
 ## Settings
 
-They're inside the headset. Press **Y + B + both triggers**.
+They're inside the headset. **Left grip + menu** opens the overlay. Menu by
+itself pauses the game (same as pressing Y).
 
 | | |
 |---|---|
 | **REFRESH** | 72 / 80 / 90 / 120 Hz |
 | **DENSITY** | how sharp — 1.0x to 2.0x |
-| **PACING** | **FAST** or **SMOOTH** |
+| **PACING** | **SNAP** / **FAST** / **SMOOTH** |
 | **AUTO** | start with the headset |
+| **STEAMVR** | opens the SteamVR dashboard |
 | **APPLY** | save and restart SteamVR |
 
-**PACING** is worth knowing about. It's how long the headset waits before showing
-a frame, which is the trade between latency and steadiness:
+Hit **APPLY** and it sticks. Next morning you don't have to put it all back.
 
-- **FAST** — lowest latency. Best for rhythm games where you need your hands to
-  feel instant.
-- **SMOOTH** — about 8 ms more latency, but rock-steady frame delivery. Better
-  for anything with a lot of camera movement.
+Point at a row and pull the trigger. The stick still works.
 
-Try both. They feel genuinely different.
+**PACING** is how long the headset waits before showing a frame:
+
+- **SNAP** — show it as soon as it arrives. For rhythm games. A bit more
+  sensitive if the cable hiccups.
+- **FAST** — the default. Hands feel like Link.
+- **SMOOTH** — waits a little longer, but rock-steady. Better if the camera
+  moves a lot.
+
+Try them. They feel different.
+
+There's a quiet lobby while SteamVR isn't up yet. Controllers, a floor, that's
+it.
 
 If 120 Hz doesn't stick, your headset may need it enabled in its own settings
 first, or your cable may not be USB 3.
+
+---
+
+## Lately
+
+The old overlay chord was **Y + B + both triggers**. That was way too easy to
+hit mid-song, so it's gone. Overlay is grip + menu. The SteamVR dashboard is a
+button on the overlay — not a hold. A hold used to hitch the compositor for
+like 90 ms, which in Beat Saber is a miss.
+
+Menu tap actually pauses the game now. On SteamVR Touch that's Y, so we send
+Y. Opening the Steam overlay just to pause was a workaround, not the design.
+
+Video rides UDP. If a USB packet vanishes you lose a frame, not the whole
+stream for a third of a second.
 
 ---
 
@@ -68,7 +94,8 @@ Edit one, restart SteamVR. The useful ones:
 | file | what it does |
 |---|---|
 | `yoinked_bitrate.txt` | Mbps **per eye**. Higher is sharper. Too high and you get stutters |
-| `yoinked_pipeline.txt` | same as PACING — `2` fast, `3` smooth |
+| `yoinked_pipeline.txt` | same as PACING — `1` snap, `2` fast, `3` smooth |
+| `yoinked_render_scale.txt` | extra render sharpness. Costs the game GPU, not the encoder. `1.0` default |
 | `yoinked_foveate.txt` | `1` keeps the centre sharp and compresses the edges. `0` for uniform |
 | `yoinked_pack.txt` | `1` encodes both eyes in one pass. Faster. `0` for separate |
 | `yoinked_refresh.txt` | Hz. Must match what your headset actually granted |
@@ -89,6 +116,10 @@ If you're on 120 Hz and it's marginal, 90 Hz is much easier to hold.
 **Blurry.** Raise DENSITY in the headset menu, or raise the bitrate.
 
 **Sluggish hands.** Set PACING to FAST.
+
+**Menu does nothing.** That's the overlay chord if you're also holding grip.
+Menu alone should pause. Y also pauses. SteamVR dashboard is the STEAMVR row,
+not the hamburger.
 
 ---
 

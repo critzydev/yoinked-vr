@@ -162,6 +162,7 @@ if ($problems.Count -eq 0) {
     foreach ($p in $problems) { Write-Host "    - $p" -ForegroundColor Yellow }
 }
 Write-Host ""
-Write-Host "  Settings are in the headset: press Y + B + both triggers." -ForegroundColor DarkGray
+Write-Host "  Settings are in the headset: left grip + menu." -ForegroundColor DarkGray
+Write-Host "  Menu tap pauses the game. STEAMVR on the overlay opens the dashboard." -ForegroundColor DarkGray
 Write-Host "  Installed at $Root" -ForegroundColor DarkGray
 Write-Host ""
