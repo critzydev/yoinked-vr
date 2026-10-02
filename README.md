@@ -26,27 +26,47 @@ Your headset also needs Developer Mode turned on — Meta Horizon phone app → 
 headset → Headset Settings → Developer Mode. The installer waits for you at that
 step, so you can do it then.
 
+It also asks what the headset should hear — pick whatever you normally listen
+on. To change it later, paste this into PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\yoinked\audio-device.ps1"
+```
+
 That's it. Start SteamVR, put the headset on.
 
 ---
 
 ## Settings
 
-They're inside the headset. **Left grip + menu** opens the overlay. Menu by
-itself pauses the game (same as pressing Y).
+They're on a watch on your left wrist. **Hold the left menu button** for half a
+second and it shows up. A quick tap still pauses the game — the game never sees
+the hold.
+
+Press the face to open it (left trigger while you look at it). Grab the bezel
+with your right hand and twist to pick:
 
 | | |
 |---|---|
-| **REFRESH** | 72 / 80 / 90 / 120 Hz |
-| **DENSITY** | how sharp — 1.0x to 2.0x |
+| **STEAM** | opens the SteamVR dashboard |
+| **SETUP** | the settings below |
+| **EXIT** | closes SteamVR. The headset stays in the lobby |
+
+STEAM and EXIT want two presses, so you don't hit them by accident.
+
+In **SETUP**, twist to a row and press to change it:
+
+| | |
+|---|---|
+| **HZ** | 72 / 80 / 90 / 120 |
+| **X** | how sharp — 1.0x to 2.0x |
 | **PACING** | **SNAP** / **FAST** / **SMOOTH** |
 | **AUTO** | start with the headset |
-| **STEAMVR** | opens the SteamVR dashboard |
-| **APPLY** | save and restart SteamVR |
+| **DONE** | save. Restarts SteamVR if you changed something |
 
-Hit **APPLY** and it sticks. Next morning you don't have to put it all back.
+It sticks. Next morning you don't have to put it all back.
 
-Point at a row and pull the trigger. The stick still works.
+Menu or B puts the watch away.
 
 **PACING** is how long the headset waits before showing a frame:
 
@@ -68,13 +88,20 @@ first, or your cable may not be USB 3.
 
 ## Lately
 
-The old overlay chord was **Y + B + both triggers**. That was way too easy to
-hit mid-song, so it's gone. Overlay is grip + menu. The SteamVR dashboard is a
-button on the overlay — not a hold. A hold used to hitch the compositor for
-like 90 ms, which in Beat Saber is a miss.
+Settings moved to the wrist watch. The flat overlay is gone.
 
-Menu tap actually pauses the game now. On SteamVR Touch that's Y, so we send
-Y. Opening the Steam overlay just to pause was a workaround, not the design.
+The PC now locks its frame timing to the headset's, so every frame lands on the
+tick it was made for. No more slow drift into a stutter every few minutes.
+
+About 3 ms less delay between the PC and your eyes. The headset does less work
+per frame, and that comes straight off the wait.
+
+Controllers are predicted by the headset's own tracking instead of SteamVR's
+straight-line guess. It sees the swing turning. `yoinked_predict.txt` → `0` if
+you want the old way back.
+
+SteamVR popups (chaperone, notifications) used to blank an eye for a split
+second. They're drawn over the game now.
 
 Video rides UDP. If a USB packet vanishes you lose a frame, not the whole
 stream for a third of a second.
@@ -97,7 +124,9 @@ Edit one, restart SteamVR. The useful ones:
 | `yoinked_pipeline.txt` | same as PACING — `1` snap, `2` fast, `3` smooth |
 | `yoinked_render_scale.txt` | extra render sharpness. Costs the game GPU, not the encoder. `1.0` default |
 | `yoinked_foveate.txt` | `1` keeps the centre sharp and compresses the edges. `0` for uniform |
-| `yoinked_pack.txt` | `1` encodes both eyes in one pass. Faster. `0` for separate |
+| `yoinked_pack.txt` | `0` encodes each eye on its own — on GPUs with two encoders (RTX 40) both at once. `1` packs both into one pass |
+| `yoinked_predict.txt` | `1` controllers use the headset's prediction. `0` SteamVR's |
+| `yoinked_audio.txt` | what the headset hears. Part of a device name; empty = Windows default. `audio-device.ps1` picks it for you |
 | `yoinked_refresh.txt` | Hz. Must match what your headset actually granted |
 
 Reinstalling never overwrites these — your tuning survives updates.
@@ -117,9 +146,12 @@ If you're on 120 Hz and it's marginal, 90 Hz is much easier to hold.
 
 **Sluggish hands.** Set PACING to FAST.
 
-**Menu does nothing.** That's the overlay chord if you're also holding grip.
-Menu alone should pause. Y also pauses. SteamVR dashboard is the STEAMVR row,
-not the hamburger.
+**Menu does nothing.** A tap pauses. Holding it opens the watch instead, and
+the game never sees a hold. Y also pauses. SteamVR dashboard is STEAM on the
+watch, not the hamburger.
+
+**Wrong audio, or none.** Run the audio picker from the Install section and pick
+the output you're actually listening on, then restart SteamVR.
 
 ---
 
